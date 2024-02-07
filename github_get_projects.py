@@ -74,10 +74,10 @@ def get_repositories():
 
         for i, repo in enumerate(repositories, start=1):
             file.write(f"## _{i}. {repo['name']}._ \n")
-            file.write(f"### Descripción: {repo['description']}.\n\n")
-            file.write(f"Lenguaje: {repo['language']}.\n\n")
-            file.write(f"Última actualización: {repo['last_updated']}.\n\n")
-            file.write(f'Url: <a href="{repo['url']}"> {repo['url']} </a> \n\n')
+            file.write(f"| Lenguaje             | Descripción                                                    | Última actualización          | \n")
+            file.write(f"| :------------------- | :------------------------------------------------------------- | :---------------------------- | \n")
+            file.write(f"| `{repo['language']}` | {repo['description']}                                          | `{repo['last_updated']}`      | \n\n")
+            file.write(f'<a href="{repo['url']}"> {repo['url']} </a> \n')
 
     driver.quit()
 
