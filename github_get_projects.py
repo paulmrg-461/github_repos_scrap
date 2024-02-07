@@ -73,11 +73,11 @@ def get_repositories():
         file.write(f'<a href="https://github.com/{USERNAME}?tab=repositories">https://github.com/{USERNAME}?tab=repositories</a> \n')
 
         for i, repo in enumerate(repositories, start=1):
-            file.write(f"## _{i}. Nombre repositorio: {repo['name']}._ \n")
-            file.write(f"Descripción: {repo['description']}.\n")
-            file.write(f"Lenguaje: {repo['language']}.\n")
-            file.write(f'Url: <a href="{repo['url']}"> {repo['url']} </a> \n')
+            file.write(f"## _{i}. {repo['name']}._ \n")
+            file.write(f"### Descripción: {repo['description']}.\n\n")
+            file.write(f"Lenguaje: {repo['language']}.\n\n")
             file.write(f"Última actualización: {repo['last_updated']}.\n\n")
+            file.write(f'Url: <a href="{repo['url']}"> {repo['url']} </a> \n\n')
 
     driver.quit()
 
