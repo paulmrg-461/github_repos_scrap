@@ -14,7 +14,7 @@ USERNAME        = 'YOUR_USERNAME'
 PASSWORD        = 'YOUR_PASSWORD'
 URL             = 'https://github.com/login'
 URL_REPOS       = f"https://github.com/{USERNAME}?tab=repositories"
-file_path       = './repositories_list.txt'
+file_path       = './README.md'
 
 def login():
     driver.get(URL)
@@ -25,7 +25,7 @@ def login():
     password_field.send_keys(PASSWORD)
 
     password_field.send_keys(Keys.RETURN)
-    time.sleep(5)
+    time.sleep(30)
 
 def get_repositories():
     driver.get(URL_REPOS)
@@ -69,11 +69,14 @@ def get_repositories():
         })
 
     with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(f"# {USERNAME} Github repositories.\n")
+        file.write(f'<a href="https://github.com/{USERNAME}?tab=repositories">https://github.com/{USERNAME}?tab=repositories</a> \n')
+
         for i, repo in enumerate(repositories, start=1):
-            file.write(f"{i}. Nombre repositorio: {repo['name']}.\n")
+            file.write(f"## _{i}. Nombre repositorio: {repo['name']}._ \n")
             file.write(f"Descripción: {repo['description']}.\n")
             file.write(f"Lenguaje: {repo['language']}.\n")
-            file.write(f"Url: {repo['url']}.\n")
+            file.write(f'Url: <a href="{repo['url']}"> {repo['url']} </a> \n')
             file.write(f"Última actualización: {repo['last_updated']}.\n\n")
 
     driver.quit()
