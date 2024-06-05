@@ -27,9 +27,21 @@ def login():
     password_field.send_keys(Keys.RETURN)
     time.sleep(30)
 
+def get_commit_count(repo_url):
+    driver.get(repo_url)
+    wait = WebDriverWait(driver, 20)  # Aumenta el tiempo de espera
+    try:
+        # Espera a que el elemento de commits esté visible y obtén su texto
+        commits_element = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'span.Text-sc-17v1xeu-0.gPDEWA.fgColor-default')))
+        commit_text = commits_element.text
+        print(commit_text)
+        return commit_text
+    except TimeoutException:
+        return "N/A"
+
 def get_repositories():
     driver.get(URL_REPOS)
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ul[data-filterable-for="your-repos-filter"]')))
 
     repos           = driver.find_elements(By.CSS_SELECTOR, 'ul[data-filterable-for="your-repos-filter"] li[itemprop="owns"]')
@@ -60,13 +72,19 @@ def get_repositories():
         except:
             last_updated_formatted  = "Not available"
         
+        commit_counter              = get_commit_count(repo_url)
+        
         repositories.append({
-            'name'          : name,
-            'description'   : description,
-            'language'      : language,
-            'url'           : repo_url,
-            'last_updated'  : last_updated_formatted
+            'name'              : name,
+            'description'       : description,
+            'language'          : language,
+            'url'               : repo_url,
+            'commit_counter'    : commit_counter,
+            'last_updated'      : last_updated_formatted
         })
+        driver.get(URL_REPOS)
+        wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'ul[data-filterable-for="your-repos-filter"]')))
+        time.sleep(1)
 
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(f"# {USERNAME} Github repositories.\n")
@@ -74,9 +92,9 @@ def get_repositories():
 
         for i, repo in enumerate(repositories, start=1):
             file.write(f"## _{i}. {repo['name']}._ \n")
-            file.write(f"| Lenguaje             | Descripción                                                    | Última actualización          | \n")
-            file.write(f"| :------------------- | :------------------------------------------------------------- | :---------------------------- | \n")
-            file.write(f"| `{repo['language']}` | {repo['description']}                                          | `{repo['last_updated']}`      | \n\n")
+            file.write(f"| Language             | Description                                                    | Last update          | Commits | \n")
+            file.write(f"| :------------------- | :------------------------------------------------------------- | :---------------------------- | :------ | \n")
+            file.write(f"| `{repo['language']}` | {repo['description']}                                          | `{repo['last_updated']}`      | `{repo['commit_counter']}` |\n\n")
             file.write(f'<a href="{repo['url']}"> {repo['url']} </a> \n')
 
     driver.quit()
